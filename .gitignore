@@ -1,0 +1,6 @@
+bin*
+obj*
+.suo
+000.testlog
+testlog.manifest*
+.dtbcache.v2*
