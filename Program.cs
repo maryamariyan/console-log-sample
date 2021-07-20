@@ -10,10 +10,9 @@ namespace Demo
         {
             using ILoggerFactory loggerFactory =
                 LoggerFactory.Create(builder =>
-                    builder.AddSimpleConsole(options =>
+                    builder.AddSystemdConsole(options =>
                     {
                         options.IncludeScopes = true;
-                        options.SingleLine = true;
                         options.TimestampFormat = "hh:mm:ss ";
                     }));
 
