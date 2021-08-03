@@ -17,8 +17,22 @@ namespace Demo
         }
     }
 
-    class Program
+    partial class Program
     {
+        private const string MessageTemplate_0_Args = "message template #0: Name Batman is 82 years old from Gotham moved here 2 years ago bought 20 donuts";
+        private const string MessageTemplate_5_Args = "message template #0: Name {Name} is {Age} years old from {City} moved here {YearsSince} years ago bought {numDonuts} donuts";
+
+        private static string Name = "Batman";
+        private static int Age = 82;
+        private static string City = "Gotham";
+        private static int YearsSince = 2;
+        private static long NumDonuts = 20;
+        private static int NumLoggerProviders = 7;
+        private static int NumExtraLoggers = 0;
+
+        [LoggerMessage(EventId = 1023, Level = LogLevel.Critical, Message = MessageTemplate_0_Args)]
+        public static partial void LogCritical_0args_Generated(ILogger logger);
+
         public static void Main(string[] args)
         {
             using ILoggerFactory loggerFactory =
@@ -29,8 +43,8 @@ namespace Demo
                         o.IncludeScopes = true;
                         o.TimestampFormat = "hh:mm:ss ";
                         o.ColorBehavior = LoggerColorBehavior.Default;
-                    }));
-
+                    }).AddSimpleConsole());
+            
             ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
             logger.LogInformation("Random log \x1B[42mwith green background\x1B[49m message");
             using (logger.BeginScope("[scope is enabled]"))
@@ -38,6 +52,8 @@ namespace Demo
                 logger.LogInformation("Hello World!");
                 logger.LogInformation("Logs contain timestamp and log level.");
                 logger.LogInformation("Each log message is fit in a single line.");
+                LogCritical_0args_Generated(logger);
+                logger.LogWarning(MessageTemplate_5_Args, Name, Age, City, YearsSince, NumDonuts);
             }
         }
     }
