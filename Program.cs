@@ -19,19 +19,10 @@ namespace Demo
 
     partial class Program
     {
-        private const string MessageTemplate_0_Args = "message template #0: Name Batman is 82 years old from Gotham moved here 2 years ago bought 20 donuts";
-        private const string MessageTemplate_5_Args = "message template #0: Name {Name} is {Age} years old from {City} moved here {YearsSince} years ago bought {numDonuts} donuts";
+        private const string MessageTemplate_1_Arg = "log #{LogNumber}";
 
-        private static string Name = "Batman";
-        private static int Age = 82;
-        private static string City = "Gotham";
-        private static int YearsSince = 2;
-        private static long NumDonuts = 20;
-        private static int NumLoggerProviders = 7;
-        private static int NumExtraLoggers = 0;
-
-        [LoggerMessage(EventId = 1023, Level = LogLevel.Critical, Message = MessageTemplate_0_Args)]
-        public static partial void LogCritical_0args_Generated(ILogger logger);
+        [LoggerMessage(EventId = 1023, Level = LogLevel.Critical, Message = MessageTemplate_1_Arg)]
+        public static partial void LogCritical_1_Arg_Generated(ILogger logger, long logNumber);
 
         public static void Main(string[] args)
         {
@@ -39,21 +30,14 @@ namespace Demo
                 LoggerFactory.Create(builder =>
                     builder.AddCustomFormatter(o =>
                     {
-                        o.CustomPrefix = " --------------- ";
-                        o.IncludeScopes = true;
-                        o.TimestampFormat = "hh:mm:ss ";
+                        o.CustomPrefix = " >>> ";
                         o.ColorBehavior = LoggerColorBehavior.Default;
-                    }).AddSimpleConsole());
+                    }));
             
             ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
-            logger.LogInformation("Random log \x1B[42mwith green background\x1B[49m message");
-            using (logger.BeginScope("[scope is enabled]"))
+            for (long i = 0; i < 11; i++)
             {
-                logger.LogInformation("Hello World!");
-                logger.LogInformation("Logs contain timestamp and log level.");
-                logger.LogInformation("Each log message is fit in a single line.");
-                LogCritical_0args_Generated(logger);
-                logger.LogWarning(MessageTemplate_5_Args, Name, Age, City, YearsSince, NumDonuts);
+                LogCritical_1_Arg_Generated(logger, i);
             }
         }
     }
@@ -96,7 +80,7 @@ namespace Console.ExampleFormatters.Custom
                 textWriter.Write(foregroundColor);
             }
 
-            textWriter.WriteLine(message);
+            textWriter.Write(message);
 
             if (foregroundColor != null)
             {
@@ -185,7 +169,7 @@ namespace Console.ExampleFormatters.Custom
             }
 
             CustomLogicGoesHere(textWriter);
-            textWriter.WriteLine(message);
+            textWriter.Write(message);
         }
 
         private void CustomLogicGoesHere(TextWriter textWriter)
@@ -199,7 +183,7 @@ namespace Console.ExampleFormatters.Custom
             }
             else
             {
-                textWriter.WriteLine(_formatterOptions.CustomPrefix);
+                textWriter.Write(_formatterOptions.CustomPrefix);
             }
         }
 
