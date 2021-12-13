@@ -20,9 +20,27 @@ namespace Demo
     partial class Program
     {
         private const string MessageTemplate_1_Arg = "log #{LogNumber}";
+        private const string MessageTemplate_N_Arg = "log #{F1} #{F2} #{F3} #{F4} #{F5} #{F6} #{F7} #{F8} #{F9} #{F10} #{F11} #{F12} #{F13}";
 
         [LoggerMessage(EventId = 1023, Level = LogLevel.Critical, Message = MessageTemplate_1_Arg)]
         public static partial void LogCritical_1_Arg_Generated(ILogger logger, long logNumber);
+
+        [LoggerMessage(EventId = 1024, Message = MessageTemplate_N_Arg)]
+        public static partial void Log_N_Arg_Generated(ILogger logger,
+            LogLevel level,
+            long f1,
+            long f2,
+            long f3,
+            long f4,
+            long f5,
+            long f6,
+            long f7,
+            long f8,
+            long f9,
+            long f10,
+            long f11,
+            long f12,
+            long f13);
 
         public static void Main(string[] args)
         {
@@ -35,10 +53,12 @@ namespace Demo
                     }));
             
             ILogger<Program> logger = loggerFactory.CreateLogger<Program>();
-            for (long i = 0; i < 11; i++)
-            {
-                LogCritical_1_Arg_Generated(logger, i);
-            }
+            int c = 0;
+            Log_N_Arg_Generated(logger, LogLevel.Critical, 
+                c++, c++, c++, 
+                c++, c++, c++, 
+                c++, c++, c++, 
+                c++, c++, c++, c++);
         }
     }
 }
